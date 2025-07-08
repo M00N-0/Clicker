@@ -18,23 +18,27 @@ public class Monster : MonoBehaviour
     private void Awake()
     {
         curHp = maxHp;
+        animator = GetComponent<Animator>();
         nameText.text = monsterName;
     }
 
     public void OnHit(float damage)
     {
         curHp -= damage;
-        if(curHp < 0)
+        if (curHp == 0) isDead = true;
+        else if(curHp < 0)
         {
             curHp = 0;
             isDead = true;
         }
+        animator.SetTrigger("Hit");
         Debug.Log("Slime Hit!, Current Hp : " + curHp);
         hpBar.ChangeHpBarAmount(curHp / maxHp);
 
         if (isDead)
         {
             Debug.Log("Slime is Dead");
+            animator.SetTrigger("Death");
             Destroy(gameObject, 1.5f);
             Destroy(nameText);
             hpBar.OnDestroy();
